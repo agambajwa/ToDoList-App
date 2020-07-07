@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todolistapp/helpers/drawer_navigation.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
         ),
       ),
+      drawer: DrawerNavigation(),
     );
   }
 }
