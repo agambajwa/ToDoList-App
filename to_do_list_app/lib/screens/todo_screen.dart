@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:todolistapp/models/todo.dart';
 import 'package:todolistapp/services/category_service.dart';
+import 'package:intl/intl.dart';
+import 'package:todolistapp/services/todo_service.dart';
 
 class TodoScreen extends StatefulWidget {
   @override
@@ -7,13 +10,28 @@ class TodoScreen extends StatefulWidget {
 }
 
 class _TodoScreenState extends State<TodoScreen> {
-  var todoNameController = TextEditingController();
-  var todoDescController = TextEditingController();
-  var todoDateController = TextEditingController();
+  var _todoNameController = TextEditingController();
+  var _todoDescController = TextEditingController();
+  var _todoDateController = TextEditingController();
+
+  final GlobalKey<ScaffoldState> _globalKey = new GlobalKey<ScaffoldState>();
 
   var _selectedCategory;
   var _categories = List<DropdownMenuItem>();
 
+  DateTime _dateTime = DateTime.now();
+
+  _selectedToDoDate(BuildContext context) async {
+    var _pickedDate = await showDatePicker(
+        context: context,
+        initialDate: _dateTime,
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2100));
+    if(_pickedDate != null) {
+      _dateTime = _pickedDate;
+      _todoDateController.text = DateFormat('dd-MM-yyyy').format(_pickedDate);
+    }
+  }
 
   @override
   void initState() {
@@ -34,9 +52,29 @@ class _TodoScreenState extends State<TodoScreen> {
     });
   }
 
+  showSuccessSnackBar(message) {
+    var _snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.yellowAccent
+        ),
+      ),
+      action: SnackBarAction(
+          label: 'Hide',
+          textColor: Colors.grey,
+          onPressed: () {
+
+          }),
+      backgroundColor: Colors.black,
+    );
+    _globalKey.currentState.showSnackBar(_snackBar);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text('Create a new to-do'),
       ),
@@ -47,7 +85,7 @@ class _TodoScreenState extends State<TodoScreen> {
             Padding(
               padding: EdgeInsets.only(bottom: 12.0),
               child: TextField(
-                controller: todoNameController,
+                controller: _todoNameController,
                 decoration: InputDecoration(
                     labelText: "Name",
                     hintText: "Buy mangoes",
@@ -64,7 +102,7 @@ class _TodoScreenState extends State<TodoScreen> {
             Padding(
               padding: EdgeInsets.only(bottom: 12.0),
               child: TextField(
-                  controller: todoDescController,
+                  controller: _todoDescController,
                   decoration: InputDecoration(
                       labelText: "Description",
                       hintText: "Alphonso mangoes from nearby supermarket",
@@ -81,13 +119,15 @@ class _TodoScreenState extends State<TodoScreen> {
             Padding(
               padding: EdgeInsets.only(bottom: 12.0),
               child: TextField(
-                  controller: todoDateController,
+                  controller: _todoDateController,
                   decoration: InputDecoration(
                       labelText: "Date",
                       hintText: "22-07-2020",
                       fillColor: Colors.black54,
                       prefixIcon: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          _selectedToDoDate(context);
+                        },
                         child: Icon(Icons.date_range),
                       ),
                       focusedBorder: OutlineInputBorder(
@@ -115,7 +155,23 @@ class _TodoScreenState extends State<TodoScreen> {
             Padding(
               padding: EdgeInsets.all(15.0),
               child: FlatButton(
-                onPressed: () {},
+                onPressed: () async {
+                  var toDoObject = ToDo();
+
+                  toDoObject.name = _todoNameController.text;
+                  toDoObject.description = _todoDescController.text;
+                  toDoObject.date = _todoDateController.text;
+                  toDoObject.isFinished = 0;
+                  toDoObject.category = _selectedCategory.toString();
+
+                  var _toDoService = ToDoService();
+                  var result = await _toDoService.saveToDo(toDoObject);
+
+                  if(result > 0) {
+                    print(result);
+                    showSuccessSnackBar('Item created successfully!');
+                  }
+                },
                 child: Text('Save'),
                 textColor: Colors.black,
                 color: Colors.yellowAccent,
