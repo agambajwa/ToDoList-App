@@ -7,6 +7,8 @@ A simple yet elegant to-do listing app made using Flutter and Sqflite.
 - [intl 0.16.1](https://pub.dev/packages/intl)
 - [Android Studio](https://developer.android.com/studio)
 
+### Note : There are some basic features missing from the app, I am still working on this, and is nowhere near done.
+
 ## ScreenShots
 <img src="screens/Home.jpg" alt="Home" width="250"/>
 <img src="screens/Add new To-Do.jpg" alt="Add new To-Do" width="250"/>
