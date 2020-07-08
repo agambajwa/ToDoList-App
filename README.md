@@ -8,4 +8,4 @@ A simple yet elegant to-do listing app made using Flutter and Sqflite.
 - [Android Studio](https://developer.android.com/studio)
 
 ## ScreenShots
-![image](screens/Add new Category.jpg)
+[image](screens/Add new Category.jpg)
