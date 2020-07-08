@@ -4,6 +4,8 @@ import 'package:todolistapp/services/category_service.dart';
 import 'package:intl/intl.dart';
 import 'package:todolistapp/services/todo_service.dart';
 
+import 'home_screen.dart';
+
 class TodoScreen extends StatefulWidget {
   @override
   _TodoScreenState createState() => _TodoScreenState();
@@ -76,6 +78,13 @@ class _TodoScreenState extends State<TodoScreen> {
     return Scaffold(
       key: _globalKey,
       appBar: AppBar(
+        leading: FlatButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen()));
+          },
+          child: Icon(Icons.home, color: Colors.black,),
+          color: Colors.yellow,
+        ),
         title: Text('Create a new to-do'),
       ),
       body: Padding(

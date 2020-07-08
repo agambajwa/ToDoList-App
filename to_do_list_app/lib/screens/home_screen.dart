@@ -12,6 +12,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   ToDoService _toDoService;
+  var _toDo = ToDo();
+
+  final GlobalKey<ScaffoldState> _globalKey = new GlobalKey<ScaffoldState>();
 
   List<ToDo> _toDoList = List<ToDo>();
 
@@ -36,15 +39,107 @@ class _HomeScreenState extends State<HomeScreen> {
         model.category = toDo['category'];
         model.isFinished = toDo['isFinished'];
 
-        _toDoList.add(model);
+        if(model.isFinished == 0) {
+          _toDoList.add(model);
+        }
       });
     });
   }
 
+  _deleteFormDialog(BuildContext context, toDoID) {
+    return showDialog(context: context, barrierDismissible: true, builder: (param){
+      return AlertDialog(
+        shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(28.0)
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+            textColor: Colors.yellowAccent,
+            color: Colors.black26,
+            shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)
+            ),
+          ),
+          FlatButton(
+            onPressed: () async {
+              var result = await _toDoService.deleteToDo(toDoID);
+              if(result > 0) {
+                print(result);
+                getAllToDos();
+                Navigator.pop(context);
+                showSuccessSnackBar('Deleted successfully!');
+              } else {
+                showSuccessSnackBar('Some error occurred, please debug :(');
+              }
+            },
+            child: Text('Delete'),
+            textColor: Colors.black,
+            color: Colors.red,
+            shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)
+            ),
+          ),
+        ],
+        title: Text('Delete the item?'),
+      );
+    });
+  }
+  showSuccessSnackBar(message) {
+    var _snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(
+            color: Colors.yellowAccent
+        ),
+      ),
+      action: SnackBarAction(
+          label: 'Hide',
+          textColor: Colors.grey,
+          onPressed: () {
+
+          }),
+      backgroundColor: Colors.black,
+    );
+    _globalKey.currentState.showSnackBar(_snackBar);
+  }
 
   @override
   Widget build(BuildContext context) {
+    if(_toDoList.length == 0) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'To-Do List',
+            style: TextStyle(
+                fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
+        drawer: DrawerNavigation(),
+        body: Center(
+          child: Text(
+            'There are no items here',
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 16,
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => TodoScreen()));
+          },
+          child: Icon(Icons.add),
+          shape: ContinuousRectangleBorder(
+              borderRadius: BorderRadius.circular(28.0)
+          ),
+        ),
+      );
+    }
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(
             'To-Do List',
@@ -59,6 +154,24 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
           child: Card(
             child: ListTile(
+              leading: IconButton(
+                icon: Icon(Icons.done),
+                color: Colors.yellowAccent,
+                onPressed: () async {
+                  _toDo.id = _toDoList[index].id;
+                  print(_toDo.id);
+                  _toDo.name = _toDoList[index].name;
+                  _toDo.description = _toDoList[index].description;
+                  _toDo.date = _toDoList[index].date;
+                  _toDo.category = _toDoList[index].category;
+                  _toDo.isFinished = 1;
+                  var result = await _toDoService.updateToDo(_toDo);
+                  if(result > 0) {
+                    print(result);
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomeScreen()));
+                  }
+                },
+              ),
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
@@ -66,12 +179,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               subtitle: Text(
-                  _toDoList[index].category ?? 'No category',
-                      style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-              trailing: Text(_toDoList[index].date ?? 'No date'),
+                      _toDoList[index].category ?? 'No category',
+                          style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+              trailing: IconButton(
+                    icon: Icon(Icons.delete_sweep),
+                    color: Colors.red,
+                    onPressed: () async {
+                      _deleteFormDialog(context, _toDoList[index].id);
+                    },
+                  ),
             ),
           ),
         );

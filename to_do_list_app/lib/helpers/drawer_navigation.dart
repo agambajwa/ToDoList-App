@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todolistapp/screens/categories_screen.dart';
 import 'package:todolistapp/screens/category_todos.dart';
+import 'package:todolistapp/screens/done_screen.dart';
 import 'package:todolistapp/screens/home_screen.dart';
 import 'package:todolistapp/services/category_service.dart';
 
@@ -71,6 +72,13 @@ class _DrawerNavigationState extends State<DrawerNavigation> {
               title: Text("Categories"),
               onTap: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => CategoriesScreen()));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.done_all),
+              title: Text("Done"),
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => DoneScreen()));
               },
             ),
             Divider(),

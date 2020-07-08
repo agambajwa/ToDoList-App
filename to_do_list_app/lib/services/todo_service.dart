@@ -19,4 +19,11 @@ class ToDoService {
   readToDoByCategory(category) async {
     return await _repository.readDataByColumnName('todos', 'category', category);
   }
+  updateToDo(ToDo toDo) async {
+    return await _repository.updateData('todos', toDo.toDoMap());
+  }
+
+  deleteToDo(toDoID) async {
+    return await _repository.deleteData('todos', toDoID);
+  }
 }
