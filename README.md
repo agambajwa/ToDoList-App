@@ -8,4 +8,4 @@ A simple yet elegant to-do listing app made using Flutter and Sqflite.
 - [Android Studio](https://developer.android.com/studio)
 
 ## ScreenShots
-![Home](screens/Home.jpg =250x100)
+<img src="screens/Home.jpg" alt="Home" width="250"/>
