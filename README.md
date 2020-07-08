@@ -9,3 +9,9 @@ A simple yet elegant to-do listing app made using Flutter and Sqflite.
 
 ## ScreenShots
 <img src="screens/Home.jpg" alt="Home" width="250"/>
+<img src="screens/Add new To-Do.jpg" alt="Add new To-Do" width="250"/>
+<img src="screens/Navigation Drawer.jpg" alt="Navigation Drawer" width="250"/>
+<img src="screens/Categories.jpg" alt="Categories" width="250"/>
+<img src="screens/Add new Category.jpg" alt="Add new Category" width="250"/>
+<img src="screens/Edit existing Category.jpg" alt="Edit existing Category" width="250"/>
+<img src="screens/To-Dos by Category.jpg" alt="To-Dos by Category" width="250"/>
