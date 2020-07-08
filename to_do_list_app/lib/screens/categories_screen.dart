@@ -81,6 +81,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 Navigator.pop(context);
                 getAllCategories();
                 showSuccessSnackBar('Added successfully!');
+              } else {
+                showSuccessSnackBar('Some error occurred, please debug :(');
               }
             },
             child: Text('Add'),
@@ -95,16 +97,34 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         content: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              TextField(
-                controller: _categoryNameController,
-                decoration: InputDecoration(
-                  labelText: 'Name',
+              Padding(
+                padding: EdgeInsets.only(top: 2.0),
+                child: TextField(
+                  controller: _categoryNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.yellowAccent,
+                              width: 2.0
+                          )
+                      ),
+                  ),
                 ),
               ),
-              TextField(
-                controller: _categoryDescController,
-                decoration: InputDecoration(
-                  labelText: 'Description',
+              Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: TextField(
+                  controller: _categoryDescController,
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                              color: Colors.yellowAccent,
+                              width: 2.0
+                          )
+                      )
+                  ),
                 ),
               ),
             ],
@@ -141,6 +161,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 Navigator.pop(context);
                 getAllCategories();
                 showSuccessSnackBar('Updated successfully!');
+              } else {
+                showSuccessSnackBar('Some error occurred, please debug :(');
               }
             },
             child: Text('Update'),
@@ -155,21 +177,79 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         content: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              TextField(
-                controller: _editNameController,
-                decoration: InputDecoration(
-                  labelText: 'Name',
+              Padding(
+                padding: EdgeInsets.only(top: 2.0),
+                child: TextField(
+                  controller: _editNameController,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.yellowAccent,
+                            width: 2.0
+                        )
+                    ),
+                  ),
                 ),
               ),
-              TextField(
-                controller: _editDescController,
-                decoration: InputDecoration(
-                  labelText: 'Description',
+              Padding(
+                padding: EdgeInsets.only(top: 10.0),
+                child: TextField(
+                  controller: _editDescController,
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                    focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            color: Colors.yellowAccent,
+                            width: 2.0
+                        )
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
         ),
+      );
+    });
+  }
+  _deleteFormDialog(BuildContext context, categoryID) {
+    return showDialog(context: context, barrierDismissible: true, builder: (param){
+      return AlertDialog(
+        shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(28.0)
+        ),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+            textColor: Colors.yellowAccent,
+            color: Colors.black26,
+            shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)
+            ),
+          ),
+          FlatButton(
+            onPressed: () async {
+              var result = await _categoryService.deleteCategory(categoryID);
+              if(result > 0) {
+                print(result);
+                Navigator.pop(context);
+                getAllCategories();
+                showSuccessSnackBar('Deleted successfully!');
+              } else {
+                showSuccessSnackBar('Some error occurred, please debug :(');
+              }
+            },
+            child: Text('Delete'),
+            textColor: Colors.black,
+            color: Colors.red,
+            shape: ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0)
+            ),
+          ),
+        ],
+        title: Text('Delete the category?'),
       );
     });
   }
@@ -184,7 +264,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       ),
       action: SnackBarAction(
           label: 'Hide',
-          textColor: Colors.yellowAccent,
+          textColor: Colors.grey,
           onPressed: () {
 
           }),
@@ -213,7 +293,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           child: Card(
             child: ListTile(
               leading: IconButton(
-                icon: Icon(Icons.edit_attributes),
+                icon: Icon(Icons.edit),
+                color: Colors.yellowAccent,
                 onPressed: (){
                   editCategory(context, _categoryList[index].id);
                 },
@@ -230,8 +311,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               ),
               trailing: IconButton(
                 icon: Icon(Icons.delete_sweep),
-                color: Colors.yellowAccent,
-                onPressed: (){},
+                color: Colors.red,
+                onPressed: (){
+                  _deleteFormDialog(context, _categoryList[index].id);
+                },
               ),
             ),
           ),
