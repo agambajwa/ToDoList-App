@@ -13,7 +13,7 @@ A simple yet elegant to-do listing app made using Flutter and Sqflite.
 |Home Page|Add new To-Do Page|Navigation Drawer|Categories Page|
 |:------------:|:------------:|:-------------:|:-------------:|
 <img src="screens/Home.jpg" alt="Home" width="200"/>|<img src="screens/Add new To-Do.jpg" alt="Add new To-Do" width="200"/>|<img src="screens/Navigation Drawer.jpg" alt="Navigation Drawer" width="200"/>|<img src="screens/Categories.jpg" alt="Categories" width="200"/>
-!
+<br>
 |Add new Category|Edit existing Category|To-Dos by Category Page|
 |:------------:|:------------:|:-------------:|
 <img src="screens/Add new Category.jpg" alt="Add new Category" width="200"/>|<img src="screens/Edit existing Category.jpg" alt="Edit existing Category" width="200"/>|<img src="screens/To-Dos by Category.jpg" alt="To-Dos by Category" width="200"/>
